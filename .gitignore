@@ -30,10 +30,6 @@ _testmain.go
 # App build directory
 bin/*
 
-# Ignore config files
-*.yaml
-*.yml
-
 # GoLand
 .idea/
 

@@ -1,0 +1,49 @@
+services:
+  go:
+    build:
+      context: .
+    depends_on:
+      - mariadb
+    volumes:
+      - ./doc:/doc:rw
+    ports:
+      - 8989:80
+    networks:
+      dev_proxy:
+        aliases:
+          - biblio-api
+
+  mariadb:
+    image: mariadb:lts
+    restart: unless-stopped
+#    ports:
+#      - 3306:3306
+    environment:
+      MYSQL_ROOT_USER: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: biblio-db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: itme
+    volumes:
+      - mariadb:/var/lib/mysql
+#      - ./docker/mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      dev_proxy:
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8888:80
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+    depends_on:
+      - mariadb
+
+volumes:
+  mariadb:
+
+
+networks:
+  dev_proxy:
+    external: true
